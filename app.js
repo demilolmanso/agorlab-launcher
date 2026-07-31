@@ -7,15 +7,15 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "http
    1. CONFIGURACIÓN — EDITA ESTAS DOS COSAS Y NADA MÁS
    ================================================================ */
 const firebaseConfig = {
-  apiKey: "PEGA_AQUI_TU_API_KEY",
-  authDomain: "TU_PROYECTO.firebaseapp.com",
-  projectId: "TU_PROYECTO",
-  storageBucket: "TU_PROYECTO.appspot.com", // proyectos nuevos: "TU_PROYECTO.firebasestorage.app"
-  messagingSenderId: "XXXXXXXXXXXX",
-  appId: "XXXXXXXXXXXXXXXX",
-};
+    apiKey: "AIzaSyCd87ofcZJpWcnR5Pn9DbSAUkO8QGdrsZo",
+    authDomain: "agorlauncher.firebaseapp.com",
+    projectId: "agorlauncher",
+    storageBucket: "agorlauncher.firebasestorage.app",
+    messagingSenderId: "277464720167",
+    appId: "1:277464720167:web:00dfc4ac4fa1f8711bff02"
+  };
 
-const ADMIN_EMAILS = ["tu-correo@gmail.com"]; // ← TU cuenta de Google (minúsculas)
+const ADMIN_EMAILS = ["demiancepeda2005@gmail.com"]; // ← TU cuenta de Google (minúsculas)
 /* ================================================================ */
 
 const fb = initializeApp(firebaseConfig);
