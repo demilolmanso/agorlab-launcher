@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agorlauncher</title>
+  <meta name="description" content="Tienda y launcher de apps y juegos HTML5 que se instalan y corren 100% en tu dispositivo." />
+  <meta name="theme-color" content="#0a1517" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="%230a1517"/><path d="M9 23V9l14 14V9" fill="none" stroke="%23ffb454" stroke-width="3"/></svg>' />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Secuencia de arranque -->
+  <div id="boot">
+    <div class="boot-inner">
+      <div class="boot-logo">Agorlab<span>·OS</span></div>
+      <div class="boot-lines" id="boot-lines"></div>
+      <div class="boot-bar"><i></i></div>
+    </div>
+  </div>
+
+  <header id="topbar">
+    <div class="brand" data-action="tab" data-view="store">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="29" height="29" fill="none" stroke="#ffb454" stroke-width="2"/>
+        <path d="M9 23V9l14 14V9" fill="none" stroke="#e8f1ef" stroke-width="2.5"/>
+      </svg>
+      <span class="brand-name">Agorlab</span>
+      <span class="brand-tag">runtime·local</span>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-action="tab" data-view="store">TIENDA</button>
+      <button class="tab" data-action="tab" data-view="library">BIBLIOTECA <span class="tab-badge" id="lib-count">0</span></button>
+      <button class="tab tab-admin" data-action="tab" data-view="admin" id="tab-admin" hidden>ADMIN</button>
+    </nav>
+
+    <div class="top-right">
+      <div class="search-wrap" id="search-wrap">
+        <input id="search" type="search" placeholder="Buscar apps y juegos…" autocomplete="off" />
+      </div>
+      <div class="net-led" id="net-led" title="Estado de conexión"><i></i><span>EN LÍNEA</span></div>
+      <div id="user-zone"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TIENDA -->
+    <section id="view-store" class="view">
+      <div id="featured"></div>
+      <div class="chips" id="chips">
+        <button class="chip active" data-action="chip" data-cat="all">TODOS</button>
+        <button class="chip" data-action="chip" data-cat="juego">JUEGOS</button>
+        <button class="chip" data-action="chip" data-cat="herramienta">HERRAMIENTAS</button>
+        <button class="chip" data-action="chip" data-cat="productividad">PRODUCTIVIDAD</button>
+        <button class="chip" data-action="chip" data-cat="ocio">OCIO</button>
+      </div>
+      <div class="grid" id="grid-apps"></div>
+      <div id="store-empty" class="empty" hidden>
+        <div class="empty-glyph">◇</div>
+        <p>Nada por aquí con ese filtro.</p>
+      </div>
+    </section>
+
+    <!-- BIBLIOTECA -->
+    <section id="view-library" class="view" hidden>
+      <div class="view-head">
+        <h2>Tu biblioteca</h2>
+        <span class="mono-note" id="lib-storage"></span>
+      </div>
+      <div class="grid" id="grid-library"></div>
+      <div id="lib-empty" class="empty">
+        <div class="empty-glyph">▣</div>
+        <p>Aún no tienes apps instaladas en este dispositivo.</p>
+        <button class="btn btn-primary" data-action="tab" data-view="store">IR A LA TIENDA</button>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="view-admin" class="view" hidden>
+      <div class="view-head">
+        <h2>Panel de administración</h2>
+        <span class="mono-note">ESCRITORIO DEL EDITOR — SOLO TÚ</span>
+      </div>
+      <div class="admin-stats" id="admin-stats"></div>
+      <div class="admin-layout">
+        <form id="app-form" class="panel">
+          <h3 id="form-title">PUBLICAR NUEVA APP</h3>
+          <label>Nombre
+            <input id="f-name" required maxlength="40" placeholder="Mi juego genial" />
+          </label>
+          <label>Tagline
+            <input id="f-tagline" maxlength="80" placeholder="Una línea que venda la app" />
+          </label>
+          <label>Descripción
+            <textarea id="f-desc" rows="3" maxlength="400" placeholder="¿Qué hace? ¿Por qué es buena?"></textarea>
+          </label>
+          <div class="form-row">
+            <label>Categoría
+              <select id="f-cat">
+                <option value="juego">Juego</option>
+                <option value="herramienta">Herramienta</option>
+                <option value="productividad">Productividad</option>
+                <option value="ocio">Ocio</option>
+              </select>
+            </label>
+            <label>Versión
+              <input id="f-version" value="1.0.0" pattern="\d+\.\d+\.\d+" />
+            </label>
+            <label>Emoji
+              <input id="f-emoji" maxlength="4" placeholder="🎮" />
+            </label>
+          </div>
+          <label>Icono (imagen opcional, se recorta a 128px)
+            <input type="file" id="f-icon" accept="image/*" />
+          </label>
+          <label>Paquete .zip <span class="mono-note" id="f-zip-hint">(obligatorio al crear)</span>
+            <input type="file" id="f-zip" accept=".zip" />
+          </label>
+          <label class="check">
+            <input type="checkbox" id="f-featured" /> Destacada (aparece en portada)
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-submit">PUBLICAR</button>
+            <button type="button" class="btn btn-ghost" id="btn-cancel" hidden>CANCELAR EDICIÓN</button>
+          </div>
+          <p class="mono-note form-hint">El zip debe traer un index.html en la raíz (o una sola carpeta raíz). La app queda alojada en Storage y se sirve desde el dispositivo de cada usuario.</p>
+        </form>
+
+        <div class="panel">
+          <h3>APPS PUBLICADAS · <span id="admin-count">0</span></h3>
+          <div id="admin-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de detalles -->
+  <div id="modal" hidden>
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="modal-card" id="modal-card"></div>
+  </div>
+
+  <!-- Runner: pantalla completa donde "arranca" la app local -->
+  <div id="runner" hidden>
+    <div class="runner-bar">
+      <span class="mono-note" id="runner-name"></span>
+      <button class="btn btn-ghost btn-sm" id="runner-close" data-action="close-runner">✕ SALIR DE LA APP</button>
+    </div>
+    <iframe id="runner-frame" title="App en ejecución" allow="fullscreen; gamepad; autoplay; clipboard-write"></iframe>
+  </div>
+
+  <div id="toasts"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="idb.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
